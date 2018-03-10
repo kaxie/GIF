@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Giphy</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+    <div id="topicdiv"></div>
+    <div id="gifContainer"></div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        var apikey = "a3Q1uoa9Cpg8xFNEX2A7dXFH9Q13pm6e";
+        var queryURLBase = "https://api.giphy.com/v1/gifs/search?q="
+        var apikeyExtension = "&api_key="+apikey;
+        var gifContainer = $("#gifContainer");
+
+        var topics = ["animals", "books", "travel", "basketball", "cars","games","heros"];
+        var topicDiv = $("#topicdiv");
+        topicDiv.attr("class", "justify-content-around");
+        for (var i = 0; i< topics.length; i++){
+            var button = $("<Button>");
+            button.attr("id", topics[i]);
+            button.attr("type", "button");
+            button.text(topics[i]);
+            button.attr("class", "btn btn-success topicBtn");
+            topicDiv.append(button);  
+        }
+
+        $(".topicBtn").on("click", function(event){
+            var topicClicked = $(this).attr('id');
+            queryURLFinal = queryURLBase+topicClicked+apikeyExtension;
+            event.preventDefault(); 
+            gifContainer.empty();
+            $.ajax({
+            url: queryURLFinal,
+            method: 'GET'
+            }).then(function(response) {
+                console.log(response);
+            var arrayData = response.data;
+            for (var i=0;i< arrayData.length;i++){
+                var gifs = $("<img>");
+                gifContainer.append(gifs);
+                var imgUrl = response.data[i].images.original["url"];
+                console.log(imgUrl);
+                gifs.attr("src", imgUrl);
+            }
+
+        });
+        });
+    </script>
+</body>
+
+</html>
+
